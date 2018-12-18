@@ -30,7 +30,7 @@ RUN set -ex; \
 	apt-key add SWITCHaai-swdistrib.asc; \
 	#echo "67f733e2cdb248e96275546146ea2997b6d0c0575c9a37cb66e00d6012a51f68 SWITCHaai-swdistrib.asc" | sha1sum -c -; \
  	apt-key add SWITCHaai-swdistrib.asc; \
-	echo 'deb http://pkg.switch.ch/switchaai/ubuntu xenial main' | sudo tee /etc/apt/sources.list.d/SWITCHaai-swdistrib.list > /dev/null; \
+	echo 'deb http://pkg.switch.ch/switchaai/ubuntu xenial main' | tee /etc/apt/sources.list.d/SWITCHaai-swdistrib.list > /dev/null; \
 	apt-get update; \
 	apt-get install -y --install-recommends shibboleth; \
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
