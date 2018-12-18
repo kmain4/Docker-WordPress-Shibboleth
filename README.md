@@ -1,2 +1,2 @@
-# Docker-WordPress-Shibboleth
-A docker based on the Wordpress:apache image that includes Shibboleth
+# Docker-php-apache-shibboleth
+A docker based on the php:apache image that installs Shibboleth
