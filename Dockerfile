@@ -59,6 +59,7 @@ RUN set -ex; \
 	chown -R www-data:www-data /usr/src/wordpress
 
 COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["apache2-foreground"]
