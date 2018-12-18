@@ -27,7 +27,16 @@ RUN set -ex; \
 	\
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
 	rm -rf /var/lib/apt/lists/*
-
+# add shib2 repo https://www.switch.ch/aai/guides/sp/installation/?os=ubuntu
+	curl -O http://pkg.switch.ch/switchaai/SWITCHaai-swdistrib.asc
+	apt-key add SWITCHaai-swdistrib.asc
+	echo "67f733e2cdb248e96275546146ea2997b6d0c0575c9a37cb66e00d6012a51f68 SWITCHaai-swdistrib.asc" | sha1sum -c -; \
+ 	apt-key add SWITCHaai-swdistrib.asc
+	echo 'deb http://pkg.switch.ch/switchaai/ubuntu xenial main' | sudo tee /etc/apt/sources.list.d/SWITCHaai-swdistrib.list > /dev/null
+	apt-get update
+	apt-get install --install-recommends shibboleth
+	
+	
 # set recommended PHP.ini settings
 # see https://secure.php.net/manual/en/opcache.installation.php
 RUN { \
@@ -39,9 +48,10 @@ RUN { \
 		echo 'opcache.enable_cli=1'; \
 	} > /usr/local/etc/php/conf.d/opcache-recommended.ini
 
-RUN a2enmod rewrite expires
+RUN a2enmod rewrite expires shib2
 
 VOLUME /var/www/html
+VOLUME /etc/shibboleth
 
 ENV WORDPRESS_VERSION 5.0.1
 ENV WORDPRESS_SHA1 298bd17feb7b4948e7eb8fa0cde17438a67db19a
