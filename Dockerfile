@@ -25,8 +25,6 @@ RUN set -ex; \
 		| sort -u \
 		| xargs -rt apt-mark manual; \
 	\
-	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
-	rm -rf /var/lib/apt/lists/*; \
 	apt-get install gnupg; \
 	curl -O http://pkg.switch.ch/switchaai/SWITCHaai-swdistrib.asc; \
 	apt-key add SWITCHaai-swdistrib.asc; \
@@ -35,6 +33,8 @@ RUN set -ex; \
 	echo 'deb http://pkg.switch.ch/switchaai/ubuntu xenial main' | sudo tee /etc/apt/sources.list.d/SWITCHaai-swdistrib.list > /dev/null; \
 	apt-get update; \
 	apt-get install --install-recommends shibboleth; \
+	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
+	rm -rf /var/lib/apt/lists/*; \
 # set recommended PHP.ini settings
 # see https://secure.php.net/manual/en/opcache.installation.php
 RUN { \
