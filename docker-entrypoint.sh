@@ -44,7 +44,7 @@ if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
 		user="$(id -u)"
 		group="$(id -g)"
 	fi
-
+	service shibd restart
 	if [ ! -e index.php ] && [ ! -e wp-includes/version.php ]; then
 		echo >&2 "WordPress not found in $PWD - copying now..."
 		if [ -n "$(ls -A)" ]; then
