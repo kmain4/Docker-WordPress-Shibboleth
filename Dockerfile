@@ -27,6 +27,7 @@ RUN set -ex; \
 	\
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
 	rm -rf /var/lib/apt/lists/*
+	\
 # add shib2 repo https://www.switch.ch/aai/guides/sp/installation/?os=ubuntu
 	curl -O http://pkg.switch.ch/switchaai/SWITCHaai-swdistrib.asc
 	apt-key add SWITCHaai-swdistrib.asc
