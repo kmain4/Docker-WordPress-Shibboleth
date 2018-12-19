@@ -1,4 +1,4 @@
-FROM php:7.2-apache
+FROM php:5.6-apache
 
 # install the PHP extensions we need
 RUN set -ex; \
@@ -27,7 +27,8 @@ RUN set -ex; \
 	\
 	apt-get install -y libapache2-mod-shib2; \
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
-	rm -rf /var/lib/apt/lists/* \
+	rm -rf /var/lib/apt/lists/*
+
 # set recommended PHP.ini settings
 # see https://secure.php.net/manual/en/opcache.installation.php
 RUN { \
