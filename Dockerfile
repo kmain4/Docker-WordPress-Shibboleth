@@ -27,6 +27,7 @@ RUN set -ex; \
 	\
 	apt-get install -y libapache2-mod-shib2; \
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
+	echo 'extension=pdo_mysql' > /usr/local/etc/php/conf.d/docker-php-ext-mysqli.ini; \
 	rm -rf /var/lib/apt/lists/* \
 # set recommended PHP.ini settings
 # see https://secure.php.net/manual/en/opcache.installation.php
