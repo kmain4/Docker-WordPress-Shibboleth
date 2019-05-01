@@ -41,6 +41,10 @@ RUN { \
 	
 RUN echo '<Location /Shibboleth.sso>' >> /etc/apache2/conf-available/shib2.conf
 RUN echo '  SetHandler shib' >> /etc/apache2/conf-available/shib2.conf
+RUN echo '  AuthType None' >> /etc/apache2/conf-available/shib2.conf
+RUN echo '  Require all granted' >> /etc/apache2/conf-available/shib2.conf
+RUN echo '  RewriteEngine On' >> /etc/apache2/conf-available/shib2.conf
+RUN echo '  RewriteRule ^/Shibboleth.sso.* - [L]' >> /etc/apache2/conf-available/shib2.conf
 RUN echo '</Location>' >> /etc/apache2/conf-available/shib2.conf
 RUN a2enmod rewrite expires shib2
 RUN a2enconf shib2
