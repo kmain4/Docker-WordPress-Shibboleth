@@ -38,8 +38,12 @@ RUN { \
 		echo 'opcache.fast_shutdown=1'; \
 		echo 'opcache.enable_cli=1'; \
 	} > /usr/local/etc/php/conf.d/opcache-recommended.ini
-
+	
+RUN echo '<Location /Shibboleth.sso>' >> /etc/apache2/conf-available/shib2.conf
+RUN echo '  SetHandler shib' >> /etc/apache2/conf-available/shib2.conf
+RUN echo '</Location>' >> /etc/apache2/conf-available/shib2.conf
 RUN a2enmod rewrite expires shib2
+RUN a2enconf shib2
 
 VOLUME /var/www/html
 VOLUME /etc/shibboleth
