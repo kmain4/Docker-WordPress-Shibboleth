@@ -24,16 +24,18 @@ file_env() {
 }
 
 $serviceurl = getenv('SERVICE_URL');
-rm /etc/apache2/sites-enabled/000-default.conf 
-echo "<VirtualHost *:80>" >> /etc/apache2/sites-enabled/000-default.conf 
-echo "   ServerName https://$serviceurl" >> /etc/apache2/sites-enabled/000-default.conf 
-echo "   ServerAlias $serviceurl" >> /etc/apache2/sites-enabled/000-default.conf 
-echo "   ServerAdmin webmaster@localhost" >> /etc/apache2/sites-enabled/000-default.conf 
-echo "   DocumentRoot /var/www/html" >> /etc/apache2/sites-enabled/000-default.conf 
-echo "   ErrorLog ${APACHE_LOG_DIR}/error.log" >> /etc/apache2/sites-enabled/000-default.conf 
-echo "   CustomLog ${APACHE_LOG_DIR}/access.log combined" >> /etc/apache2/sites-enabled/000-default.conf 
-echo "</VirtualHost>" >> /etc/apache2/sites-enabled/000-default.conf 
-service apache2 reload
+if [ -n "$serviceurl" ]; then
+	rm /etc/apache2/sites-enabled/000-default.conf 
+	echo "<VirtualHost *:80>" >> /etc/apache2/sites-enabled/000-default.conf 
+	echo "   ServerName https://$serviceurl" >> /etc/apache2/sites-enabled/000-default.conf 
+	echo "   ServerAlias $serviceurl" >> /etc/apache2/sites-enabled/000-default.conf 
+	echo "   ServerAdmin webmaster@localhost" >> /etc/apache2/sites-enabled/000-default.conf 
+	echo "   DocumentRoot /var/www/html" >> /etc/apache2/sites-enabled/000-default.conf 
+	echo "   ErrorLog ${APACHE_LOG_DIR}/error.log" >> /etc/apache2/sites-enabled/000-default.conf 
+	echo "   CustomLog ${APACHE_LOG_DIR}/access.log combined" >> /etc/apache2/sites-enabled/000-default.conf 
+	echo "</VirtualHost>" >> /etc/apache2/sites-enabled/000-default.conf 
+	service apache2 reload
+fi
 
 if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
 	if [ "$(id -u)" = '0' ]; then
