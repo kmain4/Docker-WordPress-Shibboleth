@@ -126,8 +126,8 @@ if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
 		echo "   ServerAlias $SERVICE_URL" >> /etc/apache2/sites-enabled/000-default.conf  
 		echo "   ServerAdmin webmaster@$SERVICE_URL" >> /etc/apache2/sites-enabled/000-default.conf  
 		echo "   DocumentRoot /var/www/html" >> /etc/apache2/sites-enabled/000-default.conf  
-		echo "   ErrorLog ${APACHE_LOG_DIR}/error.log" >> /etc/apache2/sites-enabled/000-default.conf  
-		echo "   CustomLog ${APACHE_LOG_DIR}/access.log combined" >> /etc/apache2/sites-enabled/000-default.conf 
+		echo '   ErrorLog ${APACHE_LOG_DIR}/error.log' >> /etc/apache2/sites-enabled/000-default.conf  
+		echo '   CustomLog ${APACHE_LOG_DIR}/access.log combined' >> /etc/apache2/sites-enabled/000-default.conf 
 		echo "</VirtualHost>" >> /etc/apache2/sites-enabled/000-default.conf 
 		service apache2 reload 
 	fi
