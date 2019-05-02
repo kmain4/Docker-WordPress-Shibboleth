@@ -54,6 +54,7 @@ VOLUME /etc/shibboleth
 
 ENV WORDPRESS_VERSION 5.0.1
 ENV WORDPRESS_SHA1 298bd17feb7b4948e7eb8fa0cde17438a67db19a
+ENV SERVICE_URL
 
 RUN cd /etc/shibboleth/ \
     && shib-keygen
