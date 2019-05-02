@@ -117,7 +117,6 @@ if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
 			haveConfig=1
 		fi
 	done
-	$SERVICE_URL = getenv('SERVICE_URL');
 	if [ -n "$SERVICE_URL" ]; then 
 		rm /etc/apache2/sites-enabled/000-default.conf 
 		echo "<VirtualHost *:80>" >> /etc/apache2/sites-enabled/000-default.conf  
