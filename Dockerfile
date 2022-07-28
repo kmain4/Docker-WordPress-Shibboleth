@@ -9,7 +9,7 @@ FROM php:8.1-apache
 # persistent dependencies
 RUN set -eux; \
 	apt-get update; \
-	apt-get install -y --no-install-recommends \
+	apt-get install -y \
 # Ghostscript is required for rendering PDF previews
 		ghostscript \
 		libapache2-mod-shib2 \
