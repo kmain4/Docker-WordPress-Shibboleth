@@ -12,6 +12,7 @@ RUN set -eux; \
 	apt-get install -y --no-install-recommends \
 # Ghostscript is required for rendering PDF previews
 		ghostscript \
+		libapache2-mod-shib2 \
 	; \
 	rm -rf /var/lib/apt/lists/*
 
@@ -29,7 +30,6 @@ RUN set -ex; \
 		libpng-dev \
 		libwebp-dev \
 		libzip-dev \
-        libapache2-mod-shib2 \
 	; \
 	\
 	docker-php-ext-configure gd \
