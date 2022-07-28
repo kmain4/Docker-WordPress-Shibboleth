@@ -12,6 +12,7 @@ RUN set -eux; \
 	apt-get install -y \
 # Ghostscript is required for rendering PDF previews
 		ghostscript \
+		libapache2-mod-shib \
 	; \
 	rm -rf /var/lib/apt/lists/*
 
@@ -68,7 +69,6 @@ RUN set -ex; \
 		| sort -u \
 		| xargs -rt apt-mark manual; \
 	\
-	apt-get install -y libapache2-mod-shib2; \
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
 	rm -rf /var/lib/apt/lists/*; \
 	\
