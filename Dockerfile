@@ -156,15 +156,15 @@ RUN set -eux; \
 	chown -R www-data:www-data wp-content; \
 	chmod -R 777 wp-content
 
-RUN echo '<Location /Shibboleth.sso>' >> /etc/apache2/conf-available/shib2.conf
-RUN echo '  SetHandler shib' >> /etc/apache2/conf-available/shib2.conf
-RUN echo '  AuthType None' >> /etc/apache2/conf-available/shib2.conf
-RUN echo '  Require all granted' >> /etc/apache2/conf-available/shib2.conf
-RUN echo '  RewriteEngine On' >> /etc/apache2/conf-available/shib2.conf
-RUN echo '  RewriteRule ^/Shibboleth.sso.* - [L]' >> /etc/apache2/conf-available/shib2.conf
-RUN echo '</Location>' >> /etc/apache2/conf-available/shib2.conf
-RUN a2enmod rewrite expires shib2
-RUN a2enconf shib2
+RUN echo '<Location /Shibboleth.sso>' >> /etc/apache2/conf-available/shib.conf
+RUN echo '  SetHandler shib' >> /etc/apache2/conf-available/shib.conf
+RUN echo '  AuthType None' >> /etc/apache2/conf-available/shib.conf
+RUN echo '  Require all granted' >> /etc/apache2/conf-available/shib.conf
+RUN echo '  RewriteEngine On' >> /etc/apache2/conf-available/shib.conf
+RUN echo '  RewriteRule ^/Shibboleth.sso.* - [L]' >> /etc/apache2/conf-available/shib.conf
+RUN echo '</Location>' >> /etc/apache2/conf-available/shib.conf
+RUN a2enmod rewrite expires shib
+RUN a2enconf shib
         
 VOLUME /var/www/html
 VOLUME /etc/shibboleth
