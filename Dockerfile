@@ -13,6 +13,7 @@ RUN set -eux; \
 # Ghostscript is required for rendering PDF previews
 		ghostscript \
 		libapache2-mod-shib \
+		libldap2-dev \
 	; \
 	rm -rf /var/lib/apt/lists/*
 
@@ -37,6 +38,7 @@ RUN set -ex; \
 		--with-jpeg \
 		--with-webp \
 	; \
+	docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ && \
 	docker-php-ext-install -j "$(nproc)" \
 		bcmath \
 		exif \
