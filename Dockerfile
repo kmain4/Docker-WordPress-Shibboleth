@@ -43,6 +43,7 @@ RUN set -ex; \
 		gd \
 		intl \
 		pdo_mysql \
+		ldap \
 		mysqli \
 		zip \
 	; \
