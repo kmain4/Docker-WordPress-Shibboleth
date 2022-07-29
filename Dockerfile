@@ -14,7 +14,6 @@ RUN set -eux; \
 		ghostscript \
 		libapache2-mod-shib \
 	; \
-	apt-get update && apt-get install -y libmemcached-dev zlib1g-dev && pecl install memcached && docker-php-ext-enable memcached.so; \
 	rm -rf /var/lib/apt/lists/*
 
 # install the PHP extensions we need (https://make.wordpress.org/hosting/handbook/handbook/server-environment/#php-extensions)
@@ -43,6 +42,7 @@ RUN set -ex; \
 		exif \
 		gd \
 		intl \
+		pdo_mysql \
 		mysqli \
 		zip \
 	; \
