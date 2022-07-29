@@ -15,6 +15,10 @@ RUN set -eux; \
 		libapache2-mod-shib \
 	; \
 	rm -rf /var/lib/apt/lists/*
+# install memcached and enable it in apache
+RUN apt-get update && apt-get install -y libmemcached-dev zlib1g-dev \
+&& pecl install memcached-3.0.3 \
+&& docker-php-ext-enable memcached
 
 # install the PHP extensions we need (https://make.wordpress.org/hosting/handbook/handbook/server-environment/#php-extensions)
 RUN set -ex; \
