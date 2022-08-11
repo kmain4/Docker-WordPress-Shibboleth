@@ -13,6 +13,7 @@ RUN set -eux; \
 # Ghostscript is required for rendering PDF previews
 		ghostscript \
 		libapache2-mod-shib \
+		libldap-common \
 		libldap2-dev \
 	; \
 	rm -rf /var/lib/apt/lists/*
