@@ -66,14 +66,7 @@ if [[ "$1" == apache2* ]] || [ "$1" = 'php-fpm' ]; then
 		tar "${sourceTarArgs[@]}" . | tar "${targetTarArgs[@]}"
 		echo >&2 "Complete! WordPress has been successfully copied to $PWD"
 	fi
-
-	wpEnvs=( "${!WORDPRESS_@}" )
-	if [ ! -s wp-config.php ] && [ "${#wpEnvs[@]}" -gt 0 ]; then
-		for wpConfigDocker in \
-			wp-config-docker.php \
-			/usr/src/wordpress/wp-config-docker.php \
-		; do
-            if [ -n "$SERVICE_URL" ]; then 
+	if [ -n "$SERVICE_URL" ]; then 
                 rm /etc/apache2/sites-enabled/000-default.conf 
                 echo "<VirtualHost *:80>" >> /etc/apache2/sites-enabled/000-default.conf  
                 echo "   ServerName https://$SERVICE_URL" >> /etc/apache2/sites-enabled/000-default.conf  
@@ -82,8 +75,15 @@ if [[ "$1" == apache2* ]] || [ "$1" = 'php-fpm' ]; then
                 echo "   DocumentRoot /var/www/html" >> /etc/apache2/sites-enabled/000-default.conf  
                 echo '   ErrorLog ${APACHE_LOG_DIR}/error.log' >> /etc/apache2/sites-enabled/000-default.conf  
                 echo '   CustomLog ${APACHE_LOG_DIR}/access.log combined' >> /etc/apache2/sites-enabled/000-default.conf 
-                echo "</VirtualHost>" >> /etc/apache2/sites-enabled/000-default.conf 
-            fi
+       		echo "</VirtualHost>" >> /etc/apache2/sites-enabled/000-default.conf 
+        fi
+	wpEnvs=( "${!WORDPRESS_@}" )
+	if [ ! -s wp-config.php ] && [ "${#wpEnvs[@]}" -gt 0 ]; then
+		for wpConfigDocker in \
+			wp-config-docker.php \
+			/usr/src/wordpress/wp-config-docker.php \
+		; do
+            
             if [ -s "$wpConfigDocker" ]; then
 				echo >&2 "No 'wp-config.php' found in $PWD, but 'WORDPRESS_...' variables supplied; copying '$wpConfigDocker' (${wpEnvs[*]})"
 				# using "awk" to replace all instances of "put your unique phrase here" with a properly unique string (for AUTH_KEY and friends to have safe defaults if they aren't specified with environment variables)

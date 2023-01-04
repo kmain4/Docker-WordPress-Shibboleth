@@ -9,9 +9,12 @@ FROM php:8.1-apache
 # persistent dependencies
 RUN set -eux; \
 	apt-get update; \
-	apt-get install -y --no-install-recommends \
+	apt-get install -y \
 # Ghostscript is required for rendering PDF previews
 		ghostscript \
+		libapache2-mod-shib \
+		libldap-common \
+		libldap2-dev \
 	; \
 	rm -rf /var/lib/apt/lists/*
 
@@ -29,7 +32,6 @@ RUN set -ex; \
 		libpng-dev \
 		libwebp-dev \
 		libzip-dev \
-        libapache2-mod-shib2 \
 	; \
 	\
 	docker-php-ext-configure gd \
@@ -37,11 +39,14 @@ RUN set -ex; \
 		--with-jpeg \
 		--with-webp \
 	; \
+	docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ && \
 	docker-php-ext-install -j "$(nproc)" \
 		bcmath \
 		exif \
 		gd \
 		intl \
+		pdo_mysql \
+		ldap \
 		mysqli \
 		zip \
 	; \
@@ -156,15 +161,15 @@ RUN set -eux; \
 	chown -R www-data:www-data wp-content; \
 	chmod -R 777 wp-content
 
-RUN echo '<Location /Shibboleth.sso>' >> /etc/apache2/conf-available/shib2.conf
-RUN echo '  SetHandler shib' >> /etc/apache2/conf-available/shib2.conf
-RUN echo '  AuthType None' >> /etc/apache2/conf-available/shib2.conf
-RUN echo '  Require all granted' >> /etc/apache2/conf-available/shib2.conf
-RUN echo '  RewriteEngine On' >> /etc/apache2/conf-available/shib2.conf
-RUN echo '  RewriteRule ^/Shibboleth.sso.* - [L]' >> /etc/apache2/conf-available/shib2.conf
-RUN echo '</Location>' >> /etc/apache2/conf-available/shib2.conf
-RUN a2enmod rewrite expires shib2
-RUN a2enconf shib2
+RUN echo '<Location /Shibboleth.sso>' >> /etc/apache2/conf-available/shib.conf
+RUN echo '  SetHandler shib' >> /etc/apache2/conf-available/shib.conf
+RUN echo '  AuthType None' >> /etc/apache2/conf-available/shib.conf
+RUN echo '  Require all granted' >> /etc/apache2/conf-available/shib.conf
+RUN echo '  RewriteEngine On' >> /etc/apache2/conf-available/shib.conf
+RUN echo '  RewriteRule ^/Shibboleth.sso.* - [L]' >> /etc/apache2/conf-available/shib.conf
+RUN echo '</Location>' >> /etc/apache2/conf-available/shib.conf
+RUN a2enmod rewrite expires shib
+RUN a2enconf shib
         
 VOLUME /var/www/html
 VOLUME /etc/shibboleth
