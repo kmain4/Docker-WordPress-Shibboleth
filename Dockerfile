@@ -121,39 +121,6 @@ RUN set -eux; \
 # (replace all instances of "%h" with "%a" in LogFormat)
 	find /etc/apache2 -type f -name '*.conf' -exec sed -ri 's/([[:space:]]*LogFormat[[:space:]]+"[^"]*)%h([^"]*")/\1%a\2/g' '{}' +
 
-RUN set -eux; \
-	curl -o wordpress.tar.gz -fL "https://wordpress.org/wordpress-latest.tar.gz"; \
-# upstream tarballs include ./wordpress/ so this gives us /usr/src/wordpress
-	tar -xzf wordpress.tar.gz -C /usr/src/; \
-	rm wordpress.tar.gz; \
-	\
-# https://wordpress.org/support/article/htaccess/
-	[ ! -e /usr/src/wordpress/.htaccess ]; \
-	{ \
-		echo '# BEGIN WordPress'; \
-		echo ''; \
-		echo 'RewriteEngine On'; \
-		echo 'RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]'; \
-		echo 'RewriteBase /'; \
-		echo 'RewriteRule ^index\.php$ - [L]'; \
-		echo 'RewriteCond %{REQUEST_FILENAME} !-f'; \
-		echo 'RewriteCond %{REQUEST_FILENAME} !-d'; \
-		echo 'RewriteRule . /index.php [L]'; \
-		echo ''; \
-		echo '# END WordPress'; \
-	} > /usr/src/wordpress/.htaccess; \
-	\
-	chown -R www-data:www-data /usr/src/wordpress; \
-# pre-create wp-content (and single-level children) for folks who want to bind-mount themes, etc so permissions are pre-created properly instead of root:root
-# wp-content/cache: https://github.com/docker-library/wordpress/issues/534#issuecomment-705733507
-	mkdir wp-content; \
-	for dir in /usr/src/wordpress/wp-content/*/ cache; do \
-		dir="$(basename "${dir%/}")"; \
-		mkdir "wp-content/$dir"; \
-	done; \
-	chown -R www-data:www-data wp-content; \
-	chmod -R 777 wp-content
-
 RUN echo '<Location /Shibboleth.sso>' >> /etc/apache2/conf-available/shib.conf
 RUN echo '  SetHandler shib' >> /etc/apache2/conf-available/shib.conf
 RUN echo '  AuthType None' >> /etc/apache2/conf-available/shib.conf
