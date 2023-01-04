@@ -1,5 +1,41 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
+curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+chmod +x wp-cli.phar
+mv wp-cli.phar /usr/local/bin/wp
+wp cli update
+curl -O https://raw.githubusercontent.com/wp-cli/wp-cli/v2.7.1/utils/wp-completion.bash
+mv wp-completion.bash ~/.wp-completion.bash
+echo "\nsource ~/.wp-completion.bash" > ~/.bash_profile
+curl -o wordpress.tar.gz -fL "https://wordpress.org/wordpress-latest.tar.gz"; 
+# upstream tarballs include ./wordpress/ so this gives us /usr/src/wordpress
+tar -xzf wordpress.tar.gz -C /usr/src/; 
+rm wordpress.tar.gz;
+# https://wordpress.org/support/article/htaccess/
+[ ! -e /usr/src/wordpress/.htaccess ];
+{ 
+	echo '# BEGIN WordPress';
+	echo '';
+	echo 'RewriteEngine On';
+	echo 'RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]';
+	echo 'RewriteBase /';
+	echo 'RewriteRule ^index\.php$ - [L]';
+	echo 'RewriteCond %{REQUEST_FILENAME} !-f';
+	echo 'RewriteCond %{REQUEST_FILENAME} !-d';
+	echo 'RewriteRule . /index.php [L]';
+	echo '';
+	echo '# END WordPress';
+} > /usr/src/wordpress/.htaccess;
+chown -R www-data:www-data /usr/src/wordpress; 
+# pre-create wp-content (and single-level children) for folks who want to bind-mount themes, etc so permissions are pre-created properly instead of root:root
+# wp-content/cache: https://github.com/docker-library/wordpress/issues/534#issuecomment-705733507
+mkdir wp-content;
+for dir in /usr/src/wordpress/wp-content/*/ cache; do 
+	dir="$(basename "${dir%/}")";
+	mkdir "wp-content/$dir";
+done;
+chown -R www-data:www-data wp-content; 
+chmod -R 777 wp-content
 
 if [[ "$1" == apache2* ]] || [ "$1" = 'php-fpm' ]; then
 	uid="$(id -u)"
@@ -25,6 +61,7 @@ if [[ "$1" == apache2* ]] || [ "$1" = 'php-fpm' ]; then
 		group="$gid"
 	fi
     service shibd restart
+    
 	if [ ! -e index.php ] && [ ! -e wp-includes/version.php ]; then
 		# if the directory exists and WordPress doesn't appear to be installed AND the permissions of it are root:root, let's chown it (likely a Docker-created directory)
 		if [ "$uid" = '0' ] && [ "$(stat -c '%u:%g' .)" = '0:0' ]; then
