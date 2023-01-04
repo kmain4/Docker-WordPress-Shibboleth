@@ -30,15 +30,6 @@ cd cwd
 	echo '# END WordPress';
 } > /usr/src/wordpress/.htaccess;
 chown -R www-data:www-data /usr/src/wordpress; 
-# pre-create wp-content (and single-level children) for folks who want to bind-mount themes, etc so permissions are pre-created properly instead of root:root
-# wp-content/cache: https://github.com/docker-library/wordpress/issues/534#issuecomment-705733507
-mkdir wp-content;
-for dir in /usr/src/wordpress/wp-content/*/ cache; do 
-	dir="$(basename "${dir%/}")";
-	mkdir "wp-content/$dir";
-done;
-chown -R www-data:www-data wp-content; 
-chmod -R 777 wp-content
 
 if [[ "$1" == apache2* ]] || [ "$1" = 'php-fpm' ]; then
 	uid="$(id -u)"
