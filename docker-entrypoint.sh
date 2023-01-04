@@ -14,6 +14,7 @@ curl -o wordpress.tar.gz -fL "https://wordpress.org/wordpress-latest.tar.gz";
 tar -xzf wordpress.tar.gz -C /usr/src/; 
 rm wordpress.tar.gz;
 cd $cwd
+
 # https://wordpress.org/support/article/htaccess/
 [ ! -e /usr/src/wordpress/.htaccess ];
 { 
