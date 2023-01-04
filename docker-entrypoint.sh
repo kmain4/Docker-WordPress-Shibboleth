@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
+cwd=$(pwd)
+cd /tmp
 curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 chmod +x wp-cli.phar
 mv wp-cli.phar /usr/local/bin/wp
@@ -11,6 +13,7 @@ curl -o wordpress.tar.gz -fL "https://wordpress.org/wordpress-latest.tar.gz";
 # upstream tarballs include ./wordpress/ so this gives us /usr/src/wordpress
 tar -xzf wordpress.tar.gz -C /usr/src/; 
 rm wordpress.tar.gz;
+cd cwd
 # https://wordpress.org/support/article/htaccess/
 [ ! -e /usr/src/wordpress/.htaccess ];
 { 
