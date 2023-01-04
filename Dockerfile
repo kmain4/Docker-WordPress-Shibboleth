@@ -1,10 +1,4 @@
-#
-# NOTE: THIS DOCKERFILE IS GENERATED VIA "apply-templates.sh"
-#
-# PLEASE DO NOT EDIT IT DIRECTLY.
-#
-
-FROM php:8.1-apache
+FROM php:8.2-apache
 
 # persistent dependencies
 RUN set -eux; \
@@ -128,7 +122,6 @@ RUN set -eux; \
 	find /etc/apache2 -type f -name '*.conf' -exec sed -ri 's/([[:space:]]*LogFormat[[:space:]]+"[^"]*)%h([^"]*")/\1%a\2/g' '{}' +
 
 RUN set -eux; \
-	version='6.0.1'; \
 	curl -o wordpress.tar.gz -fL "https://wordpress.org/wordpress-latest.tar.gz"; \
 # upstream tarballs include ./wordpress/ so this gives us /usr/src/wordpress
 	tar -xzf wordpress.tar.gz -C /usr/src/; \
