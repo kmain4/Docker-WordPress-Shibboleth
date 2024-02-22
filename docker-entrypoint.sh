@@ -9,11 +9,16 @@ wp cli update
 curl -O https://raw.githubusercontent.com/wp-cli/wp-cli/v2.7.1/utils/wp-completion.bash
 mv wp-completion.bash ~/.wp-completion.bash
 echo "\nsource ~/.wp-completion.bash" > ~/.bash_profile
-if curl -o wordpress.tar.gz -fL "https://tex-cloud-cdn.nyc3.cdn.digitaloceanspaces.com/wordpress.tar.gz"; then
-    echo "Download successful CDN"
+if curl -o wordpress.tar.gz -fL "${CDN_URL:-https://wordpress.org/wordpress-latest.tar.gz}"; then
+    echo "Download successful from CDN"
 else
-    echo "Downloading from CDN failed, trying direct"
-    curl -o wordpress.tar.gz -fL "https://wordpress.org/wordpress-latest.tar.gz"
+    echo "Downloading from CDN failed, trying direct from WordPress"
+    if curl -o wordpress.tar.gz -fL "https://wordpress.org/wordpress-latest.tar.gz"; then
+        echo "Download succesful from direct from WordPress"
+    else
+        echo "Download failed from CDN and direct from WordPress, exiting"
+        exit 1
+    fi
 fi
 # upstream tarballs include ./wordpress/ so this gives us /usr/src/wordpress
 tar -xzf wordpress.tar.gz -C /usr/src/; 
